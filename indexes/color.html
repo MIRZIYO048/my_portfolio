@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Guess</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="fav.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+   <img src="/img/correct.svg" alt="" id="checkmark">
+   <img src="/img/incorrect.svg" alt="" id="wrong">
+    <div class="top">
+       <button id="start" onclick="startGame()">Start</button>
+        <div id="color1" class="colorText color1"></div>
+        <div id="color2" class="colorText color2"></div>
+    </div>
+    <div class="bottom">
+       <div class="row">
+        <div id="Blue" class="color blue"></div>
+        <div id="Red" class="color red"></div>
+       </div>
+       <div class="row">
+        <div id="Green" class="color green"></div>
+        <div id="Yellow" class="color yellow"></div>
+       </div>
+    </div>
+    <span id="correct"></span>
+    <span id="time"></span>
+</body>
+<script >
+    var colors = ["Blue", "Red", "Green", "Yellow"];
+function startGame(){
+    setInterval(timer, 1000);
+    reset();
+}
+var checkmark = document.getElementById("checkmark");
+var wrong = document.getElementById("wrong");
+var correct = document.getElementById("correct");
+var correctInt = 0
+function checkColor(color, correctAnswer){
+    if(color===correctAnswer){
+        correctInt++;
+        checkmark.classList.add("fadeAway");
+    }else{
+        wrong.classList.add("fadeAway");
+    }
+    setTimeout(function(){
+        checkmark.classList.remove("fadeAway");
+        wrong.classList.remove("fadeAway");
+    },500);
+    reset();
+    correct.innerHTML = correctInt;
+}
+
+function reset(){
+    var random1 = Math.floor(Math.random()*2);
+    if(random1==0){
+        var color1 = document.getElementById("color1");
+        var color2 = document.getElementById("color2");
+    }else{
+        var color2 = document.getElementById("color1");
+        var color1 = document.getElementById("color2");
+    }
+    document.getElementById("start").style.display = "none";
+    var random = Math.floor(Math.random() * 4);
+    var correctAnswer = colors[random];
+    color1.innerHTML = correctAnswer;
+    color2.style.color = correctAnswer;
+    if(random+1==4){
+        color2.innerHTML = colors[random-3];
+    }else{
+        color2.innerHTML = colors[random+1];
+    }
+    if(random-1==-1){
+        color1.style.color = colors[random+3];
+    }else{
+        color1.style.color = colors[random-1];
+    }
+    color1.style.display = "block";
+    color2.style.display = "block";
+    addClick("Blue", correctAnswer);
+    addClick("Red", correctAnswer);
+    addClick("Green", correctAnswer);
+    addClick("Yellow", correctAnswer);
+}
+function addClick(color, correctAnswer){
+    var colorSpan = document.getElementById(color);
+    let onclick = "checkColor('".concat(color,"','",correctAnswer,"')");
+    colorSpan.setAttribute("onclick", onclick);
+}
+
+var countdown = 30;
+function timer(){
+    document.getElementById("time").innerHTML = countdown;
+    if(countdown==0){
+        clearInterval(timer);
+        alert("Game Over. Score: " + correctInt);
+        location.reload();
+    }
+    countdown--;
+}
+</script>
+<style>
+    *{
+    padding: 0;
+    margin: 0;
+    outline: none;
+    overflow-x: none;
+}
+body{
+    max-width: 300px;
+    margin: auto;
+    background: url(/img/i.webp) no-repeat center / cover;
+}
+.bottom{
+    display: flex;
+}
+.color{
+    width: 150px;
+    height: 150px;
+    transition: transform 300ms;
+}
+.color:hover{
+    transform: scale(0.9);
+}
+.blue{
+    background-color: blue;
+}
+.red{
+    background-color: red;
+}
+.green{
+    background-color: green;
+}
+.yellow{
+    background-color: yellow;
+}
+
+.top{
+    margin-top: 1rem;
+    width: 300px;
+    height: 200px;
+    display: grid;
+    text-align: center;
+}
+.colorText{
+    font: 3rem sans-serif; 
+    display: none;
+}
+#time{
+    position: absolute;
+/*    bottom: 20px;*/
+    text-align: center;
+    width: 300px;
+    font: 3rem sans-serif; 
+}
+#correct{
+    position: absolute;
+    color: lawngreen;
+    text-shadow: 0px 0px 10px black;
+    font: 3rem sans-serif; 
+}
+#checkmark, #wrong{
+    pointer-events: none;
+    position: absolute;
+    width: 10%;
+    left: 45%;
+    top: 10%;
+    opacity: 0;
+}
+@media only screen and (max-width: 600px){
+    #checkmark, #wrong{
+        position: absolute;
+        width: 50%;
+        left: 25%;
+        top: 10%;
+    }
+}
+
+.fadeAway{
+    animation: fadeAway 500ms;
+}
+@keyframes fadeAway{
+    0%{opacity: 1}
+    50%{opacity: 1}
+    100%{opacity: 0}
+}
+#start{
+    font-size: 2rem;
+    height: 100px;
+    padding: 0.5rem 2rem;
+    border: 3px solid black;
+    border-radius: 0.3rem;
+    margin: 1rem auto;
+    display: block;
+}
+#start{
+    background-color: lightgreen;
+}
+#start:hover{
+    background-color: yellow; 
+}
+</style>
+</html>
